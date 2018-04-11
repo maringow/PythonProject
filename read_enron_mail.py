@@ -7,13 +7,14 @@ from sqlalchemy.exc import SQLAlchemyError
 from dateutil import parser
 from addresses import Addresses
 from emails import Emails
+from base import Base
 
 
 engine = create_engine('postgresql://mgow:postgres@localhost:5432/enron_emails', echo = True)
 
 
 # create all tables
-# Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)
 
 
 # read email and return sender and message ID
@@ -59,22 +60,10 @@ session = Session()
 key_errors = 0
 
 for email in emails:
-    # try:
-    #     kw = {Emails.key_by_label[label]:value for label, value in email.items()}
-    #     dt = parser.parse(kw.pop('sent_datetime'))
-    #     fn = email['filename']
-    #     # print(kw)
-    # except KeyError as k:
-    #     print('KeyError in message {}: {}'.format(email, k))
-    #     key_errors += 1
-    # # add rows
-    # except ValueError as v:
-    #     print('ValueError in message {}: {}'.format(email, v))
     try:
         kw = {Emails.key_by_label[label]:value for label, value in email.items()}
         dt = parser.parse(kw.pop('sent_datetime'))
-        fn = email['filename']
-        emails_row = Emails(sent_datetime=dt, filename=fn, **kw)
+        emails_row = Emails(sent_datetime=dt, **kw)
         #session.add(emails_row)
         for address_type, column_name in Addresses.key_by_address_type.items():
             addresses = kw.get(column_name)
