@@ -40,17 +40,6 @@ for dirpath, dirnames, filenames in os.walk('C:\\Users\\MGOW\\Documents\\PythonP
         emails.append(parse_email(dirpath, file))
 
 addresses = []
-#
-# for email in emails:
-#     address = {}
-#     email_id = # foreign key should populate this
-#
-#     sent_to_to = email['message_to'].split(',')
-#     sent_to_cc = email['message_cc'].split(',')
-#     sent_to_bcc = email['message_bcc'].split(',')
-#
-#     address['sent_datetime'] = email['sent_datetime']
-#     address['sender'] = email['message_from']
 
 # create database session
 Session = sessionmaker()
@@ -64,20 +53,17 @@ for email in emails:
         kw = {Emails.key_by_label[label]:value for label, value in email.items()}
         dt = parser.parse(kw.pop('sent_datetime'))
         emails_row = Emails(sent_datetime=dt, **kw)
-        #session.add(emails_row)
         for address_type, column_name in Addresses.key_by_address_type.items():
             addresses = kw.get(column_name)
             if addresses:
                 for address in addresses.split(','):
                     addresses_row = Addresses(sent_datetime=dt, sender=emails_row.message_from, send_type=address_type, sent_to=address.strip())
                     emails_row.addresses.append(addresses_row)
-                # session.add(addresses_row)
         session.add(emails_row)
         session.commit()
     except KeyError as k:
         print('KeyError in message {}: {}'.format(email, k))
         key_errors += 1
-    # add rows
     except ValueError as v:
         print('ValueError in message {}: {}'.format(email, v))
     except SQLAlchemyError as e:
