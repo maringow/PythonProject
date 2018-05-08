@@ -55,15 +55,3 @@ class Emails(Base):
     @property  # like a calculated column in a report - allows you to reference as a member rather than as a function/method
     def duplicate_check(self):
         return self.body, self.message_to, self.sent_datetime
-
-#
-# class Addresses(Base):
-#     __tablename__ = 'addresses'
-#     id = Column(Integer, primary_key = True)
-#     email_id = Column(Integer, ForeignKey('emails.id'), nullable = False)
-#     sent_datetime = Column(DateTime)
-#     sender = Column(String)
-#     send_type = Column(String)
-#     sent_to = Column(String)
-#     address_types = ['To', 'Cc', 'Bcc']
-#     key_by_address_type = {item:Emails.key_by_label[item] for item in address_types}
