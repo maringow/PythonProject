@@ -35,7 +35,7 @@ def parse_email(folder, filename):
 
 emails = []
 
-for dirpath, dirnames, filenames in os.walk('C:\\Users\\MGOW\\Documents\\PythonProject\\maildir\\lay-k'):
+for dirpath, dirnames, filenames in os.walk('C:\\Users\\MGOW\\Documents\\PythonProject\\maildir'):
     for file in filenames:
         emails.append(parse_email(dirpath, file))
 
@@ -72,3 +72,5 @@ for email in emails:
         session.close()
 
 print('Count of KeyErrors: {}'.format(key_errors))
+
+# regex for parsing bracket emails '<[^a-zA-Z]*(.*)>'
